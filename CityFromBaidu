@@ -1,0 +1,72 @@
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.net.URL;
+import java.net.URLConnection;
+import java.util.HashMap;
+import java.util.Map;
+
+import org.apache.commons.lang.StringUtils;
+
+import com.shangdi.naxincameraserver.common.helper.SysInit;
+
+public class CityFromBaidu {
+	    private static String ak = SysInit.gVK("ak");
+	    private static String baiduURL = SysInit.gVK("baiduURL");
+	    
+	    public static Map<String, String> testPost(String x, String y) throws IOException {
+	        URL url = new URL(baiduURL +"ak="+ak+ 
+	        		"&callback=renderReverse&location=" + x
+	                        + "," + y + "&output=json");
+	        URLConnection connection = url.openConnection();
+	        /**
+	         * 然后把连接设为输出模式。URLConnection通常作为输入来使用，比如下载一个Web页。
+	         * 通过把URLConnection设为输出，你可以把数据向你个Web页传送。下面是如何做：
+	         */
+	        connection.setDoOutput(true);
+	        OutputStreamWriter out = new OutputStreamWriter(connection
+	                .getOutputStream(), "utf-8");
+	        //关闭流
+	        out.flush();
+	        out.close();
+	        //得到返回
+	        String res;
+	        InputStream l_urlStream;
+	        l_urlStream = connection.getInputStream();
+	        BufferedReader in = new BufferedReader(new InputStreamReader(
+	                l_urlStream,"UTF-8"));
+	        StringBuilder sb = new StringBuilder("");
+	        while ((res = in.readLine()) != null) {
+	            sb.append(res.trim());
+	        }
+	        String str = sb.toString();
+	        System.out.println(str);
+	        Map<String,String> map = new HashMap<String,String>();;
+	        if(StringUtils.isNotEmpty(str)) {
+	          int addStart = str.indexOf("formatted_address\":");
+	          int addEnd = str.indexOf("\",\"business");
+	          int cityStart = str.indexOf("city\":\"");
+	          int cityEnd = str.indexOf("\",\"country");
+	          //得到城市名
+	          if(cityStart > 0 && cityEnd > 0){
+	    	      String city = str.substring(cityStart+7, cityEnd);
+	    	      map.put("city", city);
+	         }
+	          //得到全地址
+	         if(addStart > 0 && addEnd > 0) {
+	            String address = str.substring(addStart+20, addEnd);
+	            map.put("address", address);
+	            return map;		
+	         }
+	       }
+	       return map;
+	    }
+	    public static void main(String[] args) throws IOException {
+	    	//逆地址解析location参数传入的参数格式是(纬度lat，经度lng)，先经度后纬度
+	    	Map<String, String> json = CityFromBaidu.testPost("41.138347","107.274754");
+	        System.out.println("address :" + json.get("address"));
+	        System.out.println("city:"+json.get("city"));
+	    }
+}
