@@ -13,8 +13,8 @@ import org.apache.commons.lang.StringUtils;
 import com.shangdi.naxincameraserver.common.helper.SysInit;
 
 public class CityFromBaidu {
-	    private static String ak = SysInit.gVK("ak");
-	    private static String baiduURL = SysInit.gVK("baiduURL");
+	    private static String ak = "你的百度账号key";
+	    private static String baiduURL = "http://api.map.baidu.com/geocoder/v2/?";
 	    
 	    public static Map<String, String> testPost(String x, String y) throws IOException {
 	        URL url = new URL(baiduURL +"ak="+ak+ 
