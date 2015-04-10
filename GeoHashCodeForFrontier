@@ -192,7 +192,7 @@ public class GeoHashCodeForFrontier {
 	 * @param geohash
 	 * @return
 	 */
-	public static String[] getGeoHashExpand(String geohash){
+	public String[] getGeoHashExpand(String geohash){
 		try {
 //			System.out.println("=========	"+geohash);
 			
@@ -245,7 +245,8 @@ public class GeoHashCodeForFrontier {
 	} 
 	
 	public static void main(String[] args) {
-		new GeoHashCodeForFrontier();
+		
+		GeoHashCodeForFrontier g = new GeoHashCodeForFrontier();
 		/*获取的geohash多少位，位数越长，精度越准*/
 		int geohashLen = 6;
 		double lat = 39.90403;
@@ -255,9 +256,12 @@ public class GeoHashCodeForFrontier {
 		String geohash = encode(lat, lon).substring(0, geohashLen);
 		
 		/*获取所有的矩形geohash， 一共是九个 ，包含中心点,打印顺序请参考图2*/
-		String[] result = getGeoHashExpand(geohash);
+		String[] result = g.getGeoHashExpand("wwe1uu");
 		for(int i=0;i<result.length;i++){
 			System.out.println(result[i]);
 		}
+		
+		double[] latlon = g.decode("wwe1ut6yp3qt");
+		System.out.println(latlon[0]+"-----"+latlon[1]);
 	}
 }
