@@ -1,0 +1,41 @@
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+
+public class SetBeforeTime {
+	
+	private Calendar cal = null;
+	
+	public SetBeforeTime(){}
+	
+	public Date setTimeBeforeOneHour(){
+		cal = Calendar.getInstance();
+		cal.add(Calendar.HOUR , -1) ; //把时间设置为当前时间-1小时，同理，也可以设置其他时间
+		Date date = cal.getTime();//获取到完整的时间
+		return date;
+	}
+	 
+    public Date setTimeBeforeOneDay(){
+    	cal = Calendar.getInstance();
+		cal.add(Calendar.DAY_OF_MONTH, -1 ) ; //把时间设置为当前时间-1天，同理，也可以设置其他时间
+		Date date = cal.getTime();//获取到完整的时间
+		return date;
+    }
+    
+    public Date setTimeBeforeThreeDay(){
+    	cal = Calendar.getInstance();
+		cal.add(Calendar.DAY_OF_MONTH, -3) ; //把时间设置为当前时间-3天，同理，也可以设置其他时间
+		Date date = cal.getTime();//获取到完整的时间
+		return date;
+    }
+     
+    public static void main(String args[]){
+    	SetBeforeTime s = new SetBeforeTime();
+    	DateFormat	df =  new  SimpleDateFormat( "yyyy-MM-dd HH:mm:ss" );
+    	Date d1 = s.setTimeBeforeOneHour();
+    	Date d2 = s.setTimeBeforeOneDay();
+    	Date d3 = s.setTimeBeforeThreeDay();
+    	System.out.println(df.format(d1)+"&&"+df.format(d2)+"&&"+df.format(d3));
+    }
+}
