@@ -1,0 +1,76 @@
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+
+import com.shangdi.naxincameraserver.biz.user.entity.UserInfo;
+
+public class ListSort {
+	
+	    public ListSort(){}
+
+	    public static List<UserInfo> getNewsList(List<UserInfo> list)
+	    {
+		    // 按点击数倒序
+		    Collections.sort(list, new Comparator<UserInfo>() {
+			    public int compare(UserInfo arg0, UserInfo arg1) {
+				    int d0 = Integer.parseInt(arg0.getDistance());
+				    int d1 = Integer.parseInt(arg1.getDistance());
+				    if (d1 < d0) {
+					    return 1;
+				    } else if (d1 == d0) {
+					    return 0;
+				    } else {
+					    return -1;
+				    }
+			    }
+		    });
+		
+		    return list;
+	    }
+	       
+		public static void main(String[] args) {
+			
+            List<UserInfo> list=new ArrayList<UserInfo>();
+			
+            UserInfo u1 = new UserInfo();
+            u1.setUserId(1);
+            u1.setDistance("345");
+            list.add(u1);
+            
+            UserInfo u2 = new UserInfo();
+            u2.setUserId(2);
+            u2.setDistance("65");
+            list.add(u2);
+			
+			UserInfo u3 = new UserInfo();
+            u3.setUserId(3);
+            u3.setDistance("8888");
+			list.add(u3);
+			
+			UserInfo u4 = new UserInfo();
+            u4.setUserId(4);
+            u4.setDistance("563");
+			list.add(u4);
+			
+			UserInfo u5 = new UserInfo();
+            u5.setUserId(5);
+            u5.setDistance("123");
+			list.add(u5);
+			for(int i = 0;i < list.size();i ++){
+				UserInfo uu = list.get(i);
+				System.out.println("id:"+uu.getUserId());
+			}
+
+			List<UserInfo> newList = getNewsList(list);
+			
+			for(int i  =0;i < newList.size();i ++)
+			{
+				UserInfo uuu= newList.get(i);
+				System.out.println("------------------------");
+				System.out.println("id:"+uuu.getUserId()+"     "+uuu.getDistance());
+			}
+
+		}
+
+}
