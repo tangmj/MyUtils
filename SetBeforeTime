@@ -5,25 +5,24 @@ import java.util.Date;
 
 public class SetBeforeTime {
 	
-	private Calendar cal = null;
-	
-	public SetBeforeTime(){}
-	
-	public Date setTimeBeforeOneHour(){
+	public static Date setTimeBeforeOneHour(){
+		Calendar cal = null;
 		cal = Calendar.getInstance();
 		cal.add(Calendar.HOUR , -1) ; //把时间设置为当前时间-1小时，同理，也可以设置其他时间
 		Date date = cal.getTime();//获取到完整的时间
 		return date;
 	}
 	 
-    public Date setTimeBeforeOneDay(){
+    public static Date setTimeBeforeOneDay(){
+    	Calendar cal = null;
     	cal = Calendar.getInstance();
 		cal.add(Calendar.DAY_OF_MONTH, -1 ) ; //把时间设置为当前时间-1天，同理，也可以设置其他时间
 		Date date = cal.getTime();//获取到完整的时间
 		return date;
     }
     
-    public Date setTimeBeforeThreeDay(){
+    public static Date setTimeBeforeThreeDay(){
+    	Calendar cal = null;
     	cal = Calendar.getInstance();
 		cal.add(Calendar.DAY_OF_MONTH, -3) ; //把时间设置为当前时间-3天，同理，也可以设置其他时间
 		Date date = cal.getTime();//获取到完整的时间
@@ -31,11 +30,10 @@ public class SetBeforeTime {
     }
      
     public static void main(String args[]){
-    	SetBeforeTime s = new SetBeforeTime();
     	DateFormat	df =  new  SimpleDateFormat( "yyyy-MM-dd HH:mm:ss" );
-    	Date d1 = s.setTimeBeforeOneHour();
-    	Date d2 = s.setTimeBeforeOneDay();
-    	Date d3 = s.setTimeBeforeThreeDay();
+    	Date d1 = SetBeforeTime.setTimeBeforeOneHour();
+    	Date d2 = SetBeforeTime.setTimeBeforeOneDay();
+    	Date d3 = SetBeforeTime.setTimeBeforeThreeDay();
     	System.out.println(df.format(d1)+"&&"+df.format(d2)+"&&"+df.format(d3));
     }
 }
