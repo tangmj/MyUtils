@@ -1,0 +1,208 @@
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
+
+import javax.imageio.ImageIO;
+
+import net.coobird.thumbnailator.Thumbnails;
+import net.coobird.thumbnailator.geometry.Positions;
+
+public class ThumbnailatorUtil {
+	
+    public ThumbnailatorUtil(){}
+	
+	/**
+	 * 按照指定大小缩放图片
+	 * @param filePath 原图路径,toPath 缩略图路径
+	 */
+	public static void zoomByRegularSize(String filePath,String toPath){
+		/*
+		   * size(width,height) 若图片横比200小，高比300小，不变
+		   * 若图片横比200小，高比300大，高缩小到300，图片比例不变 若图片横比200大，高比300小，横缩小到200，图片比例不变
+		   * 若图片横比200大，高比300大，图片按比例缩小，横为200或高为300
+		   */
+		  try {
+			Thumbnails.of(filePath).size(200, 300).toFile(
+					toPath);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	/**
+	  * 按scale(比例)缩放
+	  * @param filePath 原图路径,toPath 缩略图路径,zoomScaling 缩放比例
+	  */
+	public static void zoomByScale(String filePath,String toPath,double zoomScaling){
+		  
+		  try {
+			Thumbnails.of(filePath).scale(zoomScaling)
+			    .toFile(toPath);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	/**
+	 * 图片旋转
+	 * @param filePath 原图路径,toPath 缩略图路径,rotate 旋转角度 
+	 */
+    public static void revolve(String filePath,String toPath,double rotate){
+    	  /**
+    	   * rotate(角度),正数：顺时针 负数：逆时针
+    	   */
+    	  try {
+			Thumbnails.of(filePath).scale(1f).rotate(rotate).toFile(
+					toPath);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+    }
+    
+    /**
+     * 水印
+     * @param filePath 原图路径,toPath 缩略图路径,watermarkPath 水印图片路径,position 水印位置,pellucidity 透明度,quality 图片质量
+     * 水印大小有问题！！！
+     */
+    public static void watermark(String filePath,String toPath,String watermarkPath,Positions position,
+    		float pellucidity,float quality){
+    	 /**
+    	   * watermark(位置，水印图，透明度)
+    	   */
+    	  try {
+			Thumbnails.of(filePath).scale(1f).watermark(position,ImageIO.read(new File(watermarkPath)), pellucidity)
+			    .outputQuality(quality).toFile(toPath);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+    }
+    
+    /**
+     * 裁剪
+     * 根据位置裁剪
+     * @param filePath 原图路径
+     * @param toPath 缩略图路径
+     * @param position 位置
+     * @param width 所减位置的宽度
+     * @param height 所减位置的长度
+     * @param aspectRatio 纵横比
+     */
+    public static void cuttingByPositions(String filePath,String toPath,Positions position,int width,
+            int height,boolean aspectRatio){
+    	try {
+			/**
+			  * 图片中心400*400的区域
+			  */
+			Thumbnails.of(filePath).sourceRegion(Positions.CENTER, width,
+					height).scale(1f).keepAspectRatio(aspectRatio).toFile(
+					  toPath);
+			
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+    }
+    
+    /**
+     * 裁剪
+     * 根据坐标裁剪
+     * @param filePath 原图路径
+     * @param toPath 缩略图路径
+     * @param x 位置横坐标
+     * @param y 位置纵坐标
+     * @param width 所减位置的宽度
+     * @param height 所减位置的长度
+     * @param aspectRatio 纵横比
+     */
+    public static void cuttingByCoordinate(String filePath,String toPath,int x,int y,int width,int height,
+    		boolean aspectRatio){
+    	try {
+			/**
+			  * 指定坐标
+			  */
+			Thumbnails.of(filePath).sourceRegion(x, y, width, height).scale(1f).keepAspectRatio(aspectRatio).toFile(
+					  toPath);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+    }
+    
+    /**
+     * 转化图像格式
+     * @param filePath 原图路径
+     * @param toPath 缩略图路径
+     * @param format 图像格式，后缀名
+     */
+    public static void changePicFormat(String filePath,String toPath,String format){
+    	  /**
+    	   * outputFormat(图像格式)
+    	   * 例:jpg->png
+    	   */
+    	  try {
+			Thumbnails.of(filePath).scale(1f).outputFormat(format)
+			    .toFile(toPath);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+    }
+    
+    /**
+     * 输出到OutputStream（为流）
+     * @param streamFileName 流文件名称
+     * @param filePath 原图路径
+     */
+    public static void outputToStream(String streamFileName,String filePath){
+       try {
+			/**
+			  * toOutputStream(流对象)
+			  */
+			OutputStream os = new FileOutputStream(streamFileName);
+			Thumbnails.of(filePath).scale(1f).toOutputStream(os);
+			
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+    }
+    
+    /**
+     * 输出到BufferedImage
+     * 
+     * @param filePath 原图路径
+     * @param newFilePath 新图路径
+     * @param format 图片格式
+     */
+    public static void outputToBufferedImage(String filePath,String newFilePath,String format){
+    	 try {
+			/**
+			   * asBufferedImage() 返回BufferedImage
+			   */
+			  BufferedImage thumbnail = Thumbnails.of(filePath).scale(1f).asBufferedImage();
+			  ImageIO.write(thumbnail, format, new File(newFilePath));
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+    }
+    
+    
+    public static void main(String args[]){
+    	//图片格式:bmp,jpg,jpeg,gif,png,tiff(mac),eps(mac)
+    	
+//    	ThumbnailatorUtil.zoomByScale("E:/img/11.bmp", "E:/img/12.bmp", 0.25f);
+    	ThumbnailatorUtil.watermark("E:/img/11.bmp", "E:/img/13.bmp", "E:/img/sign.jpg", Positions.BOTTOM_RIGHT, 0.5f, 0.8f);
+//    	ThumbnailatorUtil.revolve("E:/img/5.jpeg", "E:/img/n5.jpeg", 90);
+    }
+}
