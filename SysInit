@@ -1,0 +1,34 @@
+import java.util.ResourceBundle;
+
+/**
+ * 
+ * @author Administrator
+ *
+ */
+public class SysInit {
+
+	private static ResourceBundle systemParamBundle;
+	
+	//初始化文件服务器地址
+	static {
+		if(null == systemParamBundle){
+			initBound();
+		}
+	}
+
+	/**
+	 * 根据配置文件里面的key获取值
+	 * @param key
+	 * @return
+	 */
+	public static String gVK(String key){
+		return systemParamBundle.getString(key);
+	}
+	
+	private static void initBound(){
+		if(systemParamBundle == null){
+			systemParamBundle = ResourceBundle.getBundle("systemParam");
+		}	
+	}
+	
+}
