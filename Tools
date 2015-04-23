@@ -1,0 +1,134 @@
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Random;
+import java.util.Set;
+
+import com.shangdi.naxincameraserver.common.exceptionormsg.Msg;
+import com.shangdi.naxincameraserver.common.helper.ApplicationContextHelper;
+
+public class Tools {
+	public static String generateAuthCode(){
+		Random rand = new Random();
+		double ram = rand.nextDouble();
+		while(ram == 0.0){
+			ram = rand.nextDouble();
+		}
+		String checkCOde = String.valueOf(ram);
+		return checkCOde.substring(2, 8);
+	}
+	
+	/**
+	 * 判断字符串是否为空
+	 * @param str
+	 * @return
+	 */
+	public static boolean isStrNUll(String str){
+		return str == null ||"".equals(str);
+	}
+	
+	/**
+	 * 前台返回值封装
+	 * @param msg
+	 * @return
+	 */
+	public static Map<String,Object> retMap(Msg msg){
+		Map<String,Object> map = new HashMap<String,Object>();
+		if(null != msg){
+			map.put("cd", msg.getCode());
+			map.put("msg", msg.getMessage());
+		}else{
+			map.put("cd", 0);
+			map.put("msg", "");
+		}
+		return map;
+	}
+	
+	/**
+	 * 将逗号隔开的字符串转化为set
+	 * @param ids
+	 * @return
+	 */
+	public static Set<String> castString2Set(String ids){
+		Set<String> set = new HashSet<String>();
+		if(!isStrNUll(ids)){
+			String[] idss = ids.split(",");
+			for(String id : idss){
+				set.add(id);
+			}
+		}
+		return set;
+	}
+	
+	/**
+	 * 格式化当前时间
+	 * @param dt
+	 * @return
+	 */
+	public static String dayToStirng(Date dt){
+		SimpleDateFormat datetimeFormat = new SimpleDateFormat("yyyy-MM-dd");
+		return datetimeFormat.format(dt);
+	}
+	
+	public static Map<String,Object> castToMap(Map<String,String[]> map){
+		Map<String,Object> ret = new HashMap<String,Object>();
+		for(String key : map.keySet()){
+			ret.put(key, map.get(key)[0]);
+		}
+		return ret;
+	}
+	
+	/**
+	 * 根据类名获取bean
+	 * @param t
+	 * @return
+	 */
+	public static Object getBeanImpl(String beanName){
+		return  ApplicationContextHelper.getApplicationContext().getBean(beanName);
+	}
+	
+	/**
+	 * 将list转化为string并去空格
+	 * @param list
+	 * @return
+	 */
+	public static String castListToStr(List<Integer> list){
+		if(list == null || list.isEmpty()){
+			return null;
+		}else{
+			StringBuffer listStr = new StringBuffer();
+			for(int i=0;i<list.size();i++){
+				listStr.append(list.get(i));
+				if(i<list.size()-1){
+					listStr.append(",");
+				}
+			}
+			return listStr.toString();
+			
+		}
+	}
+	
+	/**
+	 * 随机产生字符串
+	 * @param length
+	 * @return
+	 */
+	public static String getRandomString(int length) { //length表示生成字符串的长度
+	    String base = "abcdefghijklmnopqrstuvwxyz0123456789";   
+	    Random random = new Random();   
+	    StringBuffer sb = new StringBuffer();   
+	    for (int i = 0; i < length; i++) {   
+	        int number = random.nextInt(base.length());   
+	        sb.append(base.charAt(number));   
+	    }   
+	    return sb.toString();   
+	 }   
+
+
+	public static void main(String[] a){
+	System.out.println(getRandomString(10));
+	}
+}
