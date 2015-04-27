@@ -22,3 +22,18 @@ BEGIN
   	from friend_circle_comment c
   	where FIND_IN_SET(c.friend_circle_comment_id, getChildLst(#{friendCircle_commentId})) 
   </select>
+  
+  
+  
+  
+  /**
+	 * 删除朋友圈评论及回复信息
+	 */
+	@Override
+	public void deleteFC(Integer cId){
+		//查询
+		List<Integer> list = this.friendCircleCommentMapper.selectByFindInSet(cId);
+		FriendCircleCommentExample ex = new FriendCircleCommentExample();
+		ex.createCriteria().andFriendCircleCommentIdIn(list);
+		this.friendCircleCommentMapper.deleteByExample(ex);
+	}
