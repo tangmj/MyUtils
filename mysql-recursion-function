@@ -11,3 +11,14 @@ BEGIN
     END WHILE;
     RETURN sTemp;
   END
+  
+  
+  
+  
+  
+  <!-- 递归查询子记录 -->
+  <select id="selectByFindInSet" resultType="Integer" parameterType="Integer">
+  	select friend_circle_comment_id 
+  	from friend_circle_comment c
+  	where FIND_IN_SET(c.friend_circle_comment_id, getChildLst(#{friendCircle_commentId})) 
+  </select>
