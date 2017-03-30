@@ -1,0 +1,104 @@
+import javax.servlet.http.HttpServletRequest;
+
+import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
+
+/**
+ * 类AddressUtils.java的实现描述：地址处理工具类
+ *
+ * @author mmy 2014-8-27 上午9:06:25
+ */
+public class AddressUtils {
+	
+	public static final Logger log = Logger.getLogger(AddressUtils.class);
+
+    /**
+     * 处理基地内外地址展示问题
+     *
+     * @param tradefacility 交易场所
+     * @param address 会员所在地
+     * @param site 基地
+     * @param eleScreenCode 房间号
+     * @return
+     * @author mmy 2014-8-27 上午9:12:11
+     */
+    public static String parseTradeAddress(String tradefacility, String address, String site, String eleScreenCode) {
+        if (!StringUtils.isBlank(tradefacility)) {
+            return tradefacility;
+        }
+        if (!StringUtils.isBlank(address)) {
+            return address;
+        }
+        if (StringUtils.isBlank(site) || "基地外".equals(site)) {
+            return eleScreenCode;
+        }
+        return site + (eleScreenCode == null ? "" : eleScreenCode);
+    }
+
+    /**
+     * 处理交易场所（地址）
+     *
+     * @param province
+     * @param city
+     * @param region
+     * @param address
+     * @return
+     * @author mmy 2014-10-7 上午8:54:22
+     */
+    public static String parseTradeFacility(String province, String city, String region, String address) {
+        String tradeFacility = "";
+        if (!StringUtils.isBlank(province)) {
+            tradeFacility += province;
+        }
+        if (!StringUtils.isBlank(city)) {
+            tradeFacility += city;
+        }
+        if (!StringUtils.isBlank(region)) {
+            tradeFacility += region;
+        }
+        if (!StringUtils.isBlank(address)) {
+            tradeFacility += address;
+        }
+        return tradeFacility;
+    }
+
+    /**
+     * 获取客户端IP
+     * @param request
+     * @return
+     */
+    public static String getIpAddr(final HttpServletRequest request) {
+        try{
+            String remoteAddr = request.getHeader("X-Forwarded-For");
+            // 如果通过多级反向代理，X-Forwarded-For的值不止一个，而是一串用逗号分隔的IP值，此时取X-Forwarded-For中第一个非unknown的有效IP字符串
+            if (isEffective(remoteAddr) && (remoteAddr.indexOf(",") > -1)) {
+                String[] array = remoteAddr.split(",");
+                for (String element : array) {
+                    if (isEffective(element)) {
+                        remoteAddr = element;
+                        break;
+                    }
+                }
+            }
+            if (!isEffective(remoteAddr)) {
+                remoteAddr = request.getHeader("X-Real-IP");
+            }
+            if (!isEffective(remoteAddr)) {
+                remoteAddr = request.getRemoteAddr();
+            }
+            return remoteAddr;
+        }catch(Exception e){
+        	log.info("AddressUtils-getIpAddr-异常：", e);
+            return "";
+        }
+    }
+
+    private static boolean isEffective(final String remoteAddr) {
+        boolean isEffective = false;
+        if ((null != remoteAddr) && (!"".equals(remoteAddr.trim()))
+                && (!"unknown".equalsIgnoreCase(remoteAddr.trim()))) {
+            isEffective = true;
+        }
+        return isEffective;
+    }
+}
